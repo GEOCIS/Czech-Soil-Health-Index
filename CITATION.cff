@@ -1,0 +1,64 @@
+# Citation metadata for this repository.
+# TODO before publication: complete the fields marked TODO (repository URL,
+# version, release date, licence, ORCIDs, affiliations) and add the article
+# under "preferred-citation" once it is published.
+cff-version: 1.2.0
+message: "If you use this code, please cite the article and this repository."
+title: "Spatial assessment of soil health in the Czech Republic: Digital Soil Mapping and Soil Health Index workflow in Google Earth Engine"
+type: software
+authors:
+  - family-names: "Amorim"
+    given-names: "Merilyn T. A."
+    # orcid: "https://orcid.org/0000-0000-0000-0000"   # TODO
+    # affiliation: "TODO"
+  - family-names: "Poppiel"
+    given-names: "Raul R."
+    # orcid: "https://orcid.org/0000-0000-0000-0000"   # TODO
+    # affiliation: "TODO"
+# repository-code: "https://github.com/TODO/TODO"     # TODO
+license: MIT
+# version: "1.0.0"                                   # TODO
+# date-released: "YYYY-MM-DD"                        # TODO
+keywords:
+  - digital soil mapping
+  - soil health
+  - Google Earth Engine
+  - random forest
+  - Czech Republic
+references:
+  - type: software
+    title: "Geospatial mapping pipeline"
+    authors:
+      - family-names: "van den Hoogen"
+        given-names: "Johan"
+    repository-code: "https://github.com/hooge104/geospatial_mapping_pipeline"
+    license: MIT
+  - type: article
+    title: "Soil health in Latin America and the Caribbean"
+    authors:
+      - family-names: "Poppiel"
+        given-names: "Raul R."
+      - name: "et al."
+    journal: "Communications Earth & Environment"
+    volume: 6
+    start: 141
+    year: 2025
+    doi: "10.1038/s43247-025-02021-w"
+  - type: article
+    title: "A soil productivity system reveals most Brazilian agricultural lands are below their maximum potential"
+    authors:
+      - family-names: "Greschuk"
+        given-names: "L. T."
+      - name: "et al."
+    journal: "Scientific Reports"
+    volume: 13
+    start: 14103
+    year: 2023
+    doi: "10.1038/s41598-023-39981-y"
+# preferred-citation:            # TODO: add the article once published
+#   type: article
+#   title: "TODO"
+#   authors: [...]
+#   journal: "TODO"
+#   year: TODO
+#   doi: "TODO"

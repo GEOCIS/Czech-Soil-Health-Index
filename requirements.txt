@@ -1,0 +1,11 @@
+# Python dependencies of notebooks/DSM_pipeline_ee_RC.ipynb
+# Tested with Python 3.12. Exact versions: see the pre-publication checklist (pip freeze).
+
+earthengine-api          # Earth Engine Python API and the "earthengine" command-line tool
+google-cloud-storage     # temporary upload of the bootstrap table
+pandas>=2.0,<3.0         # pandas 3 changes groupby().apply(), used in the bootstrap sampling
+numpy
+scipy                    # convex hulls (interpolation/extrapolation analysis)
+scikit-learn             # PCA (interpolation/extrapolation analysis)
+folium                   # interactive maps
+geehydro                 # Earth Engine layers on folium maps

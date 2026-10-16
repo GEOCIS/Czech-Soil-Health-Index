@@ -1,0 +1,33 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.env
+
+# --- Jupyter / Colab ---
+.ipynb_checkpoints/
+
+# --- Local working data written by the notebook ---
+# (input CSVs, intermediate tables and outputs in ./data; the example is kept)
+notebooks/data/
+data/*
+!data/examples/
+data/examples/*
+!data/examples/README.md
+!data/examples/RC_LUCAS_C_gkg.csv
+
+# --- Credentials (never commit) ---
+credentials
+*.json.key
+*service-account*.json
+client_secret*.json
+.config/
+
+# --- OS / editors ---
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
