@@ -9,13 +9,13 @@ type: software
 authors:
   - family-names: "Amorim"
     given-names: "Merilyn T. A."
-    # orcid: "https://orcid.org/0000-0000-0000-0000"   # TODO
-    # affiliation: "TODO"
+    orcid: "https://orcid.org/0000-0003-4901-6962"
+    affiliation: Luiz de Queiroz College of Agriculture, University of São Paulo, Piracicaba, São Paulo, Brazil
   - family-names: "Poppiel"
     given-names: "Raul R."
-    # orcid: "https://orcid.org/0000-0000-0000-0000"   # TODO
-    # affiliation: "TODO"
-# repository-code: "https://github.com/TODO/TODO"     # TODO
+    # orcid: "https://orcid.org/0000-0002-1628-4154"  
+    affiliation: Luiz de Queiroz College of Agriculture, University of São Paulo, Piracicaba, São Paulo, Brazil
+"https://github.com/GEOCIS/Czech-Soil-Health-Index"
 license: MIT
 # version: "1.0.0"                                   # TODO
 # date-released: "YYYY-MM-DD"                        # TODO
