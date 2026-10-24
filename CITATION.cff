@@ -1,8 +1,6 @@
 # Citation metadata for this repository.
-repository-code: "https://github.com/GEOCIS/Czech-Soil-Health-Index"
-# version, release date, licence, ORCIDs, affiliations) and add the article
-# under "preferred-citation" once it is published.
-cff-version: 1.2.0
+# Update "version" and "date-released" at each new GitHub release.
+cff-version: 1.0.0
 message: "If you use this code, please cite the article and this repository."
 title: "Spatial assessment of soil health in the Czech Republic: Digital Soil Mapping and Soil Health Index workflow in Google Earth Engine"
 type: software
@@ -10,15 +8,23 @@ authors:
   - family-names: "Amorim"
     given-names: "Merilyn T. A."
     orcid: "https://orcid.org/0000-0003-4901-6962"
-    affiliation: Luiz de Queiroz College of Agriculture, University of São Paulo, Piracicaba, São Paulo, Brazil
+    affiliation: "Luiz de Queiroz College of Agriculture, University of São Paulo, Piracicaba, São Paulo, Brazil"
   - family-names: "Poppiel"
     given-names: "Raul R."
-    # orcid: "https://orcid.org/0000-0002-1628-4154"  
-    affiliation: Luiz de Queiroz College of Agriculture, University of São Paulo, Piracicaba, São Paulo, Brazil
-"https://github.com/GEOCIS/Czech-Soil-Health-Index"
+    orcid: "https://orcid.org/0000-0002-1628-4154"
+    affiliation: "Luiz de Queiroz College of Agriculture, University of São Paulo, Piracicaba, São Paulo, Brazil; Center for Carbon Research in Tropical Agriculture (CCARBON), University of São Paulo, Piracicaba, São Paulo, Brazil"
+  - family-names: "Gholizadeh"
+    given-names: "Asa"
+    orcid: "https://orcid.org/0000-0003-4419-5463"
+    affiliation: "Department of Soil Science and Soil Protection, Faculty of Agrobiology, Food and Natural Resources, Czech University of Life Sciences Prague, Czech Republic"
+  - family-names: "Demattê"
+    given-names: "José Alexandre Melo"
+    orcid: "https://orcid.org/0000-0001-5328-0323"
+    affiliation: "Luiz de Queiroz College of Agriculture, University of São Paulo, Piracicaba, São Paulo, Brazil; Center for Carbon Research in Tropical Agriculture (CCARBON), University of São Paulo, Piracicaba, São Paulo, Brazil"
+repository-code: "https://github.com/GEOCIS/Czech-Soil-Health-Index"
 license: MIT
-# version: "1.0.0"                                   # TODO
-# date-released: "YYYY-MM-DD"                        # TODO
+version: "1.0.0"
+date-released: "2026-10-23"
 keywords:
   - digital soil mapping
   - soil health
@@ -55,10 +61,3 @@ references:
     start: 14103
     year: 2023
     doi: "10.1038/s41598-023-39981-y"
-# preferred-citation:            # TODO: add the article once published
-#   type: article
-#   title: "TODO"
-#   authors: [...]
-#   journal: "TODO"
-#   year: TODO
-#   doi: "TODO"

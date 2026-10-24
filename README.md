@@ -2,7 +2,7 @@
 
 Code for mapping soil attributes and computing a spatial **Soil Health Index (SHI)** for the Czech Republic with Digital Soil Mapping (DSM) in Google Earth Engine (GEE).
 
-> **Status:** this repository accompanies a scientific article that is currently unpublished. The article reference, the origin of the soil function weights and the licence will be added upon publication (see [Citation](#citation)).
+> **Status:** this repository accompanies a scientific article that is currently unpublished. The article reference and the origin of the soil function weights will be added upon publication (see [Citation](#citation)). The code is already distributed under the [MIT License](LICENSE).
 
 ---
 
@@ -28,10 +28,10 @@ Code for mapping soil attributes and computing a spatial **Soil Health Index (SH
 
 The workflow combines five steps:
 
-1. **Digital Soil Mapping** of seven soil attributes (total N, available P, exchangeable K, pH in water, effective cation exchange capacity, soil organic carbon and bulk density) with Random Forest models trained in GEE from point observations and environmental covariates (multitemporal surface reflectance, terrain, climate and hydrography). One model is fitted per attribute, with hyperparameter tuning, 10-fold cross-validation and 100 bootstrap iterations for uncertainty.
+1. **Digital Soil Mapping** of eight soil attributes (total N, available P, exchangeable K, pH in water, effective cation exchange capacity, soil organic carbon, bulk density and clay content) with Random Forest models trained in GEE from point observations and environmental covariates (multitemporal surface reflectance, terrain, climate and hydrography). One model is fitted per attribute, with hyperparameter tuning, 10-fold cross-validation and 100 bootstrap iterations for uncertainty. Clay content is a supporting map: it is included in the descriptive statistics but is not used to compute the Soil Health Index.
 2. **Mosaicking** of the tiled predictions into single 90 m images.
-3. **Descriptive statistics** of the attribute maps within the Czech Republic boundary.
-4. **Normalization** of eight indicators (the seven attributes plus earthworm abundance) into unitless scores (0–1) with non-linear scoring functions.
+3. **Descriptive statistics** of the attribute maps (including clay) and of earthworm abundance within the Czech Republic boundary.
+4. **Normalization** of eight indicators (the seven attributes other than clay, plus earthworm abundance) into unitless scores (0–1) with non-linear scoring functions.
 5. **Integration** of the scores into three soil functions and into the Soil Health Index.
 
 The DSM step runs in Python (Jupyter or Google Colab) through the Earth Engine Python API; all subsequent steps run in the GEE Code Editor (JavaScript).
@@ -66,7 +66,7 @@ flowchart TD
 ```text
 .
 ├── README.md                     This file
-├── CITATION.cff                  Citation metadata (to be completed upon publication)
+├── CITATION.cff                  Citation metadata (software release; the article will be added upon publication)
 ├── LICENSE                       MIT License
 ├── THIRD_PARTY_NOTICES.md        Licence of the adapted third-party code
 ├── requirements.txt              Python dependencies of the DSM notebook
@@ -132,12 +132,12 @@ A detailed description of every step, including all parameter values, is given i
 - **Covariate sampling and pixel aggregation:** the 24 covariates are sampled at each point at 30 m; observations falling in the same 30 m pixel are averaged.
 - **Cross-validation folds:** 10 folds, assigned at random within each RESOLVE biome.
 - **Hyperparameter tuning:** grid search over Random Forest models (`ee.Classifier.smileRandomForest`, regression mode, 20 trees, bag fraction 0.632, seed 42) with variables per split ∈ {4, 8, 12, 16, 20, 24}, minimum leaf population ∈ {3, 6, 9} and maximum nodes ∈ {500, 1000, 1500} (54 models). Models are ranked by the mean cross-validated R²; RMSE and RPIQ are also reported.
-- **Prediction and uncertainty:** the best model is refitted on 100 bootstrap samples, stratified by biome according to the area proportion of each biome in the study area. The bootstrap mean is the final prediction, and the 2.5th and 97.5th bootstrap percentiles define the 95 % confidence interval.
+- **Prediction and uncertainty:** the best model is refitted on 100 bootstrap samples, stratified by biome according to the area proportion of each biome in the study area. The bootstrap mean is the final prediction, and the 2.5th and 97.5th bootstrap percentiles define the 95 % bootstrap interval (see [Bands of the predicted soil attribute maps](#bands-of-the-predicted-soil-attribute-maps)).
 - **Export:** the prediction and its confidence interval are exported at 90 m (EPSG:4326) as an ImageCollection of tiles.
 
 ### 2–3. Mosaic and descriptive statistics (`gee/00`, `gee/01`)
 
-The tiles of each attribute are mosaicked into a single image on the original 90 m pixel grid. Descriptive statistics (mean, standard deviation, minimum, maximum, pixel count and 5th, 25th, 50th, 75th and 95th percentiles) are computed for each indicator within the Czech Republic boundary.
+The tiles of each attribute are mosaicked into a single image on the original 90 m pixel grid. Descriptive statistics (mean, standard deviation, minimum, maximum, pixel count and 5th, 25th, 50th, 75th and 95th percentiles) are computed within the Czech Republic boundary for the bootstrap-mean band of each attribute map, including the supporting clay map, and for the earthworm abundance map.
 
 ### 4. Indicator normalization (`gee/02_normalization.js`)
 
@@ -267,13 +267,25 @@ Steps 3 and 4 are independent; step 5 requires step 4. The scripts in `gee/` rea
 | 1 | `<attribute>_training_data*`, `<attribute>_bootstrapSamples` | GEE assets | Training data (with covariates and folds) and bootstrap samples |
 | 1 | `<attribute>_grid_search_results_mean` / `_StDev` | GEE assets and local CSV | Cross-validation metrics (R², RMSE, RPIQ) of the 54 models |
 | 1 | `<attribute>_featureImportances.csv` | Local CSV | Mean normalized variable importance of the top 10 models |
-| 1 | `<attribute>_PredictedImages` | GEE ImageCollection | Tiles with bands `_PredictedBootstrapMean`, `_lower`, `_upper` (90 m) |
-| 2 | `RC_<attribute>_PredictedImages_90m` | GEE assets | Single-image version of each prediction |
+| 1 | `<attribute>_PredictedImages` | GEE ImageCollection | Tiles with bands `<classProperty>_PredictedBootstrapMean`, `<classProperty>_Predicted_lower`, `<classProperty>_Predicted_upper` (90 m) |
+| 2 | `RC_<attribute>_PredictedImages_90m` | GEE assets | Single-image version of each prediction (three bands, see below) |
 | 3 | `RC_descriptive_statistics_organized.csv` | Google Drive | Attribute, Mean, SD, Min, Max, Count, P5, P25, P50, P75, P95 |
 | 4 | `RC_<indicator>_MBI_90m`, `RC_BD_kgdm_LBI_90m`, `RC_pH_H2O_OMI_90m` | GEE assets | Indicator scores (0–1), band `constant` |
 | 5 | `RC_f1_90m`, `RC_f2_90m`, `RC_f3_90m`, `RC_SHI_90m` | GEE assets | Soil functions and Soil Health Index (0–1), band `constant` |
 
 The full list of output names per attribute is given in [docs/data_requirements.md](docs/data_requirements.md#outputs).
+
+### Bands of the predicted soil attribute maps
+
+Each soil attribute map (`RC_<attribute>_PredictedImages_90m`, and the tiles of `<classProperty>_PredictedImages`) has three bands, produced by the bootstrap step of the DSM notebook. Taking clay (`classProperty` = `Clay_gkg`) as an example:
+
+| Band | Name | Content |
+|---|---|---|
+| 1 | `Clay_gkg_PredictedBootstrapMean` | **Published prediction.** Mean of the 100 bootstrap predictions. This is the band used in the descriptive statistics, the normalization and the Soil Health Index. |
+| 2 | `Clay_gkg_Predicted_lower` | 2.5th percentile of the 100 bootstrap predictions (lower limit of the 95 % bootstrap interval) |
+| 3 | `Clay_gkg_Predicted_upper` | 97.5th percentile of the 100 bootstrap predictions (upper limit of the 95 % bootstrap interval) |
+
+All bands are in the units of the attribute (e.g., g kg⁻¹ for clay and SOC). The lower and upper bands, or their difference (upper − lower), can be used to map the prediction uncertainty. The interval reflects the variability of the predictions across bootstrap resamples of the training data; it does not include, for example, measurement error of the observations. The bands keep this order when the maps are exported as GeoTIFF, where band names may appear only as "Band 1", "Band 2" and "Band 3".
 
 ## Reproducibility and limitations
 
@@ -332,7 +344,13 @@ The DSM notebook is adapted from the [geospatial mapping pipeline](https://githu
 
 The datasets referenced above are subject to their own licences and terms of use, which are independent of the licence of this code. In particular, the LUCAS topsoil data are distributed by the European Soil Data Centre (ESDAC) of the Joint Research Centre under a licence agreement that requires a specific acknowledgment in publications.
 
+### Acknowledgments
+
+The authors acknowledge the financial support received from the WHEATWATCHER project, funded by the European Union under the Horizon Europe Programme and the Swiss State Secretariat for Education, Research and Innovation (SERI) under Grant Agreement No. 101156480. We thank the Geotechnologies in Soil Science research group (GeoCiS) and the University of São Paulo (USP) for operational and theoretical support. We acknowledge funding from the São Paulo Research Foundation (FAPESP; grants 2022/11034-2, 2014/22262-0, 2021/05129-8, 2021/10573-4, 2023/00438-8 and 2024/07837-8) and the National Council for Scientific and Technological Development (CNPq; grants 307190/2021-8 and 302249/2025-7) for financial support and fellowships.
+
 **Authors:**
 
 - **Merilyn T. A. Amorim** — GEE scripts (`gee/`), adaptation of the workflow to the Czech Republic.
 - **Raul R. Poppiel** — DSM notebook (`notebooks/DSM_pipeline_ee_RC.ipynb`).
+- **Asa Gholizadeh** — supervision.
+- **José Alexandre Melo Demattê** — supervision.
