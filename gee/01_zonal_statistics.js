@@ -5,7 +5,7 @@
 // Author: Merilyn T. A. Amorim
 //
 // Part of the spatial soil health assessment workflow for the Czech
-// Republic, developed on the basis of the methodologies of:
+// Republic, developed based on the methodologies of:
 //
 //   Poppiel, R.R., Cherubin, M.R., Novais, J.J.M. et al. (2025).
 //   Soil health in Latin America and the Caribbean.
@@ -23,16 +23,16 @@
 // Purpose:
 //   Computes descriptive statistics (mean, standard deviation,
 //   minimum, maximum, pixel count, and 5th, 25th, 50th, 75th and
-//   95th percentiles) of eight soil attribute maps within the
+//   95th percentiles) of nine soil attribute maps within the
 //   Czech Republic boundary at 90 m resolution, and exports them to
 //   Google Drive as a CSV table with one row per attribute.
 //
 // Inputs:
 //   - Czech Republic boundary (FeatureCollection).
 //   - Bootstrap-mean prediction maps (90 m) of total N, available P,
-//     exchangeable K, pH (H2O), effective CEC, SOC and bulk density,
-//     produced with notebooks/DSM_pipeline_ee_RC.ipynb and mosaicked
-//     into single images with 00_mosaic_predicted_images.js.
+//     exchangeable K, pH (H2O), effective CEC, SOC, bulk density and
+//     clay content, produced with notebooks/DSM_pipeline_ee_RC.ipynb
+//     and mosaicked into single images with 00_mosaic_predicted_images.js.
 //   - Earthworm abundance map from:
 //     Phillips, H.R.P., Guerra, C.A., Bartz, M.L.C. et al. (2019).
 //     Global distribution of earthworm diversity.
@@ -86,6 +86,10 @@ var BulkDensity_image = ee.Image(
   "projects/ee-geocisworldspecs-203/assets/RC_BD_kgdm3_PredictedImages_90m"
 );
 
+var Clay_image = ee.Image(
+  "projects/ee-geocisworldspecs-203/assets/RC_Clay_gkg_PredictedImages_90m"
+);
+
 var Worms_image = ee.Image(
   "projects/ee-geocisworldspecs-203/assets/Earthworms_Abundance"
 ).clip(bbox);
@@ -123,6 +127,10 @@ var BD = BulkDensity_image
   .select("Density_kgdm3_PredictedBootstrapMean")
   .rename("BD");
 
+var Clay = Clay_image
+  .select("Clay_gkg_PredictedBootstrapMean")
+  .rename("Clay");
+
 var Worms = Worms_image
   .select("b1")
   .rename("Worms");
@@ -139,6 +147,7 @@ var soil_attributes = N
   .addBands(CEC)
   .addBands(SOC)
   .addBands(BD)
+  .addBands(Clay)
   .addBands(Worms);
 
 
@@ -197,6 +206,7 @@ var attributes = [
   "CEC",
   "SOC",
   "BD",
+  "Clay",
   "Worms"
 ];
 
