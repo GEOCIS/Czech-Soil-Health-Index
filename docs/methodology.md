@@ -72,7 +72,7 @@ The top 10 models (`ensemble = True`) are trained on the full training data. The
 - `bootstrapIterations` = 100 samples, each with as many observations as the training data, drawn with replacement (seeds 1–100).
 - Sampling is stratified by biome. The number of observations drawn from each biome is proportional to its share of the study area (`strataDict`: biome 4, Temperate Broadleaf & Mixed Forests, 90.91 %; biome 5, Temperate Conifer Forests, 9.09 %). These proportions must be recalculated for other study areas.
 - The bootstrap table is written locally, copied to a temporary Cloud Storage object, ingested as `<classProperty>_bootstrapSamples` and deleted from the bucket.
-- The **best model** of the grid search is trained on each bootstrap sample and applied to the covariates. The 100 predictions are reduced to their mean (`_PredictedBootstrapMean`) and to their 2.5th and 97.5th percentiles (`_lower`, `_upper`).
+- The **best model** of the grid search is trained on each bootstrap sample and applied to the covariates. The 100 predictions are reduced to their mean (`<classProperty>_PredictedBootstrapMean`) and to their 2.5th and 97.5th percentiles (`<classProperty>_Predicted_lower`, `<classProperty>_Predicted_upper`). The mean is the published prediction and the only band used in the subsequent steps; the percentiles define a 95 % bootstrap interval that can be used to map uncertainty. The bands are stored in this order (1: mean, 2: lower, 3: upper).
 
 ### 1.7 Interpolation and extrapolation (computed, not exported)
 
@@ -91,11 +91,11 @@ The notebook includes a SLOO-CV section (buffers of 10, 100, 1,000, 2,000 and 5,
 
 ## 2. Mosaic — `gee/00_mosaic_predicted_images.js`
 
-Run once per attribute. The tiles of the ImageCollection are combined with `mosaic()` and exported as a single Image asset with all bands (`_PredictedBootstrapMean`, `_lower`, `_upper`). The export uses the projection of the original tiles (EPSG:4326, 90 m), so the pixels are not resampled, and the bounding box of the Czech Republic as region.
+Run once per attribute. The tiles of the ImageCollection are combined with `mosaic()` and exported as a single Image asset with all bands (`<classProperty>_PredictedBootstrapMean`, `<classProperty>_Predicted_lower`, `<classProperty>_Predicted_upper`). The export uses the projection of the original tiles (EPSG:4326, 90 m), so the pixels are not resampled, and the bounding box of the Czech Republic as region.
 
 ## 3. Descriptive statistics — `gee/01_zonal_statistics.js`
 
-For the bootstrap-mean maps of N, P, K, pH, CEC, SOC and bulk density, and for the earthworm abundance map, `reduceRegion` computes the mean, standard deviation, minimum, maximum, pixel count and the 5th, 25th, 50th, 75th and 95th percentiles within the Czech Republic boundary (`RC_Limits`) at 90 m. The table is exported to Google Drive with one row per attribute. With the default settings of `02_normalization.js`, the P5, P50 and P95 columns are the parameters of the normalization.
+For the bootstrap-mean maps of N, P, K, pH, CEC, SOC, bulk density and clay, and for the earthworm abundance map, `reduceRegion` computes the mean, standard deviation, minimum, maximum, pixel count and the 5th, 25th, 50th, 75th and 95th percentiles within the Czech Republic boundary (`RC_Limits`) at 90 m. The table is exported to Google Drive with one row per attribute. Clay is a supporting map: it is described here but is not normalized and does not enter the soil functions or the Soil Health Index. With the default settings of `02_normalization.js`, the P5, P50 and P95 columns are the parameters of the normalization.
 
 ## 4. Normalization — `gee/02_normalization.js`
 

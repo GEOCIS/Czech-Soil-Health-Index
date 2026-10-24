@@ -20,8 +20,10 @@
 //
 // Input:
 //   - ImageCollection "<classProperty>_PredictedImages" created by the
-//     notebook. Bands: <classProperty>_PredictedBootstrapMean, _lower,
-//     _upper.
+//     notebook. Bands: <classProperty>_PredictedBootstrapMean (bootstrap
+//     mean, the published prediction), <classProperty>_Predicted_lower
+//     and <classProperty>_Predicted_upper (2.5th and 97.5th bootstrap
+//     percentiles).
 //   - Czech Republic boundary (export region = its bounding box).
 //
 // Output:

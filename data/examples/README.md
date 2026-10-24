@@ -39,7 +39,7 @@ projectFolder = 'RC_C_gkg'                     # GEE folder created for this att
 
 - One CSV file per soil attribute, comma-separated, with a header row.
 - Coordinates in decimal degrees, WGS 84 (EPSG:4326). Reproject other coordinate systems before running the notebook.
-- One numeric attribute column whose name has no spaces; it becomes `classProperty` and is used in the names of all assets and bands (e.g. `C_gkg_PredictedBootstrapMean`).
+- One numeric attribute column whose name has no spaces; it becomes `classProperty` and is used in the names of all assets and bands (e.g. `C_gkg_PredictedBootstrapMean`, `C_gkg_Predicted_lower` and `C_gkg_Predicted_upper`).
 - Rows with missing values are removed, and values are rounded to `classProperty_roundTo` decimal places (default 2).
 - Points outside the bounding box `exportingGeometry` are discarded, and points falling in the same 30 m pixel are averaged.
 

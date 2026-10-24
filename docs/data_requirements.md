@@ -23,7 +23,7 @@ All assets below are in `projects/ee-geocisworldspecs-203/assets/` and are publi
 | `world_simplyfied` | notebook | Export tile grid |
 | `RC_Limits` | `gee/00`–`03` | Czech Republic boundary |
 | `Earthworms_Abundance` | `gee/01`, `gee/02` | Indicator (earthworm abundance) |
-| `RC_<attribute>_PredictedImages_90m` | `gee/01`, `gee/02` | Prediction maps of the article |
+| `RC_<attribute>_PredictedImages_90m` | `gee/01`, `gee/02` | Prediction maps of the article (three bands: bootstrap mean, lower and upper limits; see the README) |
 | `RC_<indicator>_MBI/LBI/OMI_90m` | `gee/03` | Indicator scores of the article |
 
 The notebook also reads the public catalogue dataset `MERIT/DEM/v1_0_3`.
@@ -96,7 +96,10 @@ The Earth Engine credentials created by `ee.Authenticate()` include the Cloud St
 | Effective CEC | `CEC_Efe_mmolkg` | `RC_CEC_Efe_mmolckg_PredictedImages_90m` | `RC_CEC_mmolckg_MBI_90m` |
 | SOC | `C_gkg` | `RC_SOC_gkg_PredictedImages_90m` | `RC_SOC_gkg_MBI_90m` |
 | Bulk density | `Density_kgdm3` | `RC_BD_kgdm3_PredictedImages_90m` | `RC_BD_kgdm_LBI_90m` |
+| Clay content (supporting map) | `Clay_gkg` | `RC_Clay_gkg_PredictedImages_90m` | — (not used in the SHI) |
 | Earthworm abundance | — | — (external map) | `RC_Worms_MBI_90m` |
+
+Each prediction map has three bands: `<classProperty>_PredictedBootstrapMean` (the published prediction, used in all subsequent steps), `<classProperty>_Predicted_lower` and `<classProperty>_Predicted_upper` (2.5th and 97.5th bootstrap percentiles). See [Bands of the predicted soil attribute maps](../README.md#bands-of-the-predicted-soil-attribute-maps).
 
 The asset names are kept as in the published analysis, so they do not follow a single pattern (e.g. `mmolkg` in band names and `mmolckg` in asset names).
 
